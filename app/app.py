@@ -22,7 +22,7 @@ graph = px.bar(data, x="Fruit", y="Amount", color="City", barmode="group")
 app.layout = html.Div(
     children=[
         html.H1(
-            children=f"Hello Dash in 2022 from {'Dev Server' if debug else 'Prod Server'}"
+            children=f"Hello Dash in 2023 from {'Dev Server' if debug else 'Prod Server'}"
         ),
         html.Div(children="""Dash: A web application framework for your data."""),
         dcc.Graph(id="example-graph", figure=graph),
