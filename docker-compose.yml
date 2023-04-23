@@ -1,0 +1,59 @@
+# host : container
+version: '3.9'
+
+services:
+  db:
+    image: postgres:11
+    environment:
+      POSTGRES_DB: micro_dashboard
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    ports:
+      - 5434:5432
+    healthcheck: 
+      test: ["CMD-SHELL", "pg_isready -d micro_dashboard -U postgres"]
+    volumes:
+      - ./database:/var/lib/postgresql/data
+  
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev #Rimuovere .dev per andare in produzione
+    restart: on-failure
+    ports:
+      - 8050:8050
+    expose:
+      - 8050
+    depends_on: 
+        - db
+
+  phppgadmin:
+    #restart: always
+    image: dockage/phppgadmin:latest
+    ports:
+    - "8888:80"
+    - "444:443"
+    environment:
+    - PHP_PG_ADMIN_SERVER_DESC=PostgreSQL
+    - PHP_PG_ADMIN_SERVER_HOST=db
+    - PHP_PG_ADMIN_SERVER_PORT=5432
+    - PHP_PG_ADMIN_SERVER_SSL_MODE=allow
+    - PHP_PG_ADMIN_SERVER_DEFAULT_DB=template1
+    - PHP_PG_ADMIN_SERVER_PG_DUMP_PATH=/usr/bin/pg_dump
+    - PHP_PG_ADMIN_SERVER_PG_DUMPALL_PATH=/usr/bin/pg_dumpall
+    - PHP_PG_ADMIN_DEFAULT_LANG=auto
+    - PHP_PG_ADMIN_AUTO_COMPLETE=default on
+    - PHP_PG_ADMIN_EXTRA_LOGIN_SECURITY=false
+    - PHP_PG_ADMIN_OWNED_ONLY=false
+    - PHP_PG_ADMIN_SHOW_COMMENTS=true
+    - PHP_PG_ADMIN_SHOW_ADVANCED=false
+    - PHP_PG_ADMIN_SHOW_SYSTEM=false
+    - PHP_PG_ADMIN_MIN_PASSWORD_LENGTH=1
+    - PHP_PG_ADMIN_LEFT_WIDTH=200
+    - PHP_PG_ADMIN_THEME=default
+    - PHP_PG_ADMIN_SHOW_OIDS=false
+    - PHP_PG_ADMIN_MAX_ROWS=30
+    - PHP_PG_ADMIN_MAX_CHARS=50
+    - PHP_PG_ADMIN_USE_XHTML_STRICT=false
+    - PHP_PG_ADMIN_HELP_BASE=http://www.postgresql.org/docs/%s/interactive/
+    - PHP_PG_ADMIN_AJAX_REFRESH=3
