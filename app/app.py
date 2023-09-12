@@ -1,5 +1,5 @@
 import os
-from dash import Dash, html, dcc
+from dash import Dash, html, dcc, dash_table
 import plotly.express as px
 import pandas as pd
 import psycopg2
@@ -16,18 +16,13 @@ app = Dash(__name__)
 
 server = app.server
 
-# data = pd.DataFrame(
-#     {
-#         "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-#         "Amount": [4, 1, 2, 2, 4, 5],
-#         "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"],
-#     }
-# )
-data = pd.read_sql('SELECT * FROM articolo LIMIT 5', conn)
-print(data)
+query_homepage = 'SELECT F.codice, F.data, C.ragione_sociale, A.codice, A.descrizione, A_F.quantita, A_F.prezzo\
+                FROM fattura AS F\
+                JOIN articolo_in_fattura AS A_F ON F.data = A_F.data_fattura_fk AND F.codice = A_F.codice_fattura_fk\
+                JOIN articolo AS A ON A.codice = A_F.codice_articolo_fk AND A.descrizione = A_F.descrizione_articolo_fk\
+                JOIN cliente AS C ON F.cliente_fk = C.codice_bms'
 
-
-#graph = px.bar(data, x="Fruit", y="Amount", color="City", barmode="group")
+data = pd.read_sql(query_homepage, conn)
 
 app.layout = html.Div(
     children=[
@@ -35,11 +30,15 @@ app.layout = html.Div(
             children=f"Hello Dash from {'Dev Server' if debug else 'Prod Server'}"
         ),
         html.Div(children="""Dash: A web application framework for your data."""),
-        html.Div(data.to_html()),
-        #dcc.Graph(id="example-graph", figure=graph),
+        dash_table.DataTable(data.to_dict('records'),
+                            [{"name": i, "id": i} for i in data.columns],
+                            sort_action="native",
+                            sort_mode='multi',
+                            filter_action="native",
+                            filter_options={"placeholder_text": "Filter column..."},
+                            page_size=10,),
     ]
 )
 
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port="8050", debug=debug)
+    app.run(host="0.0.0.0", port="8050", debug=debug, threaded=True)
