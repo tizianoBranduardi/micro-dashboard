@@ -1,42 +1,29 @@
 import os
+import dash
 from dash import Dash, html, dcc, dash_table
 import plotly.express as px
 import pandas as pd
-from db_connector import conn
+from utils.db_connector import conn, query_homepage
 
 debug = False if os.environ["DASH_DEBUG_MODE"] == "False" else True
 
-colors = {
-    'background': '#111111',
-    'text': '#7FDBFF'
-}
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = Dash(__name__)
+app = Dash(__name__, use_pages=True, external_stylesheets = external_stylesheets)
 
 server = app.server
-
-query_homepage = 'SELECT F.codice, F.data, C.ragione_sociale, A.codice, A.descrizione, A_F.quantita, A_F.prezzo\
-                FROM fattura AS F\
-                JOIN articolo_in_fattura AS A_F ON F.data = A_F.data_fattura_fk AND F.codice = A_F.codice_fattura_fk\
-                JOIN articolo AS A ON A.codice = A_F.codice_articolo_fk AND A.descrizione = A_F.descrizione_articolo_fk\
-                JOIN cliente AS C ON F.cliente_fk = C.codice_bms'
-
-data = pd.read_sql(query_homepage, conn)
 
 app.layout = html.Div(
     children=[
         html.H1(
-            children=f"Hello Dash from {'Dev Server' if debug else 'Prod Server'}"
+            children=f"BigDB - {'Versione di sviluppo' if debug else 'Versione di produzione'}"
         ),
-        html.Div(),
-        html.Div(children="""Dash: A web application framework for your data."""),
-        dash_table.DataTable(data.to_dict('records'),
-                            [{"name": i, "id": i} for i in data.columns],
-                            sort_action="native",
-                            sort_mode='multi',
-                            filter_action="native",
-                            filter_options={"placeholder_text": "Filter column..."},
-                            page_size=20,),
+        html.Div([
+            html.Div(
+                dcc.Link(f"{page['name']} - {page['path']}", href=page["relative_path"])
+            ) for page in dash.page_registry.values()
+        ]),
+        dash.page_container
     ]
 )
 
