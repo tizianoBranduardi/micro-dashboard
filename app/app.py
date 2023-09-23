@@ -2,15 +2,14 @@ import os
 from dash import Dash, html, dcc, dash_table
 import plotly.express as px
 import pandas as pd
-import psycopg2
-
-conn = psycopg2.connect(
-    host="micro-dashboard_db_1",
-    database="micro_dashboard",
-    user="postgres",
-    password="postgres")
+from db_connector import conn
 
 debug = False if os.environ["DASH_DEBUG_MODE"] == "False" else True
+
+colors = {
+    'background': '#111111',
+    'text': '#7FDBFF'
+}
 
 app = Dash(__name__)
 
@@ -29,6 +28,7 @@ app.layout = html.Div(
         html.H1(
             children=f"Hello Dash from {'Dev Server' if debug else 'Prod Server'}"
         ),
+        html.Div(),
         html.Div(children="""Dash: A web application framework for your data."""),
         dash_table.DataTable(data.to_dict('records'),
                             [{"name": i, "id": i} for i in data.columns],
@@ -36,7 +36,7 @@ app.layout = html.Div(
                             sort_mode='multi',
                             filter_action="native",
                             filter_options={"placeholder_text": "Filter column..."},
-                            page_size=10,),
+                            page_size=20,),
     ]
 )
 
