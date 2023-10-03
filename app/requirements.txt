@@ -3,3 +3,5 @@ plotly
 pandas
 gunicorn
 psycopg2
+pymysql
+SQLAlchemy

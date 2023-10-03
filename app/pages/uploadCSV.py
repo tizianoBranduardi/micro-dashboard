@@ -6,10 +6,12 @@ import datetime
 import pandas as pd
 import plotly.express as px
 from utils.db_connector import conn, query_homepage
-from utils.csv_handler.csv_reader import read_csv
+from utils.csv_handler.csv_reader import insert_into_db
 from dash import Dash, dcc, html, dash_table, Input, Output, State, callback, ctx
 
 dash.register_page(__name__)
+
+df = pd.DataFrame()
 
 layout = html.Div([
     dcc.Upload(
@@ -35,6 +37,7 @@ layout = html.Div([
 ])
 
 def parse_contents(contents, filename, date):
+    global df
     content_type, content_string = contents.split(',')
 
     decoded = base64.b64decode(content_string)
@@ -49,7 +52,7 @@ def parse_contents(contents, filename, date):
     except Exception as e:
         print(e)
         return html.Div([
-            'There was an error processing this file.'
+            'There was an error processing this file.' + e
         ])
 
     return html.Div([
@@ -82,7 +85,7 @@ def parse_contents(contents, filename, date):
 def displayClick(btn1):
     print("None of the buttons have been clicked yet")
     if "uploadButton" == ctx.triggered_id:
-        return read_csv() #TODO: Passare DF e poi inserire i dati nelle tabelle :) 
+        return html.Div([insert_into_db(df)])
     return html.H5("")
 
 @callback(Output('output-data-upload', 'children'),
