@@ -2,7 +2,7 @@ import psycopg2
 from sqlalchemy import create_engine
 
 conn = psycopg2.connect(
-    host="micro-dashboard_db_1",
+    host="db",
     database="micro_dashboard",
     user="postgres",
     password="postgres")

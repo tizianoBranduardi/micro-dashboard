@@ -19,7 +19,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev #Rimuovere .dev per andare in produzione
-    restart: on-failure
+    restart: always
     ports:
       - 8050:8050
     expose:
