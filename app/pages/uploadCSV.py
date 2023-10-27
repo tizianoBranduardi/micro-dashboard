@@ -5,7 +5,6 @@ import base64
 import datetime
 import pandas as pd
 import plotly.express as px
-from utils.db_connector import conn, query_homepage
 from utils.csv_handler.csv_reader import insert_into_db
 from dash import Dash, dcc, html, dash_table, Input, Output, State, callback, ctx
 

@@ -3,7 +3,7 @@ import dash
 from dash import Dash, html, dcc, dash_table
 import plotly.express as px
 import pandas as pd
-from utils.db_connector import conn, query_fatturato_famiglia
+from utils.db_connector import engine, query_fatturato_famiglia
 from dateutil.parser import parse
 
 dash.register_page(__name__)
@@ -14,7 +14,7 @@ colors = {
 }
 
 
-fatturato_per_famiglia = pd.read_sql(query_fatturato_famiglia, conn)
+fatturato_per_famiglia = pd.read_sql(query_fatturato_famiglia, engine)
 
 layout = html.Div(
     children=[

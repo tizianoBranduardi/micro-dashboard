@@ -1,6 +1,6 @@
 #First Install :
 docker compose up --build db
-cat .\sql\create_tables.sql | docker exec -i <DB CONTAINER ID> psql -U postgres
+cat .\sql\dump.sql | docker exec -i <DB CONTAINER ID> psql -U postgres
 
 
 #Backup your databases
