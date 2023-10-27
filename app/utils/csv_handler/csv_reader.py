@@ -12,11 +12,26 @@ def clean_df_for_articolo(df):
         check = "SELECT codice, descrizione, tipologia FROM articolo"
         keys = ['codice', 'descrizione', 'tipologia']
         check_df = pd.read_sql(sql=check, con=engine)
-        articolo = articolo.loc[articolo[keys].merge(check_df[keys], on=keys, how='left', indicator=True)['_merge'] == 'left_only']
+        articolo = articolo.loc[
+            articolo[keys].merge(check_df[keys], on=keys, how='left', indicator=True)['_merge'] == 'left_only']
         return articolo
     except Exception as error:
         print(error, flush=True)
 
+
+def clean_df_for_cliente(df):
+    try:
+        cliente = df[['codice_cli', 'ragione_sociale']]
+        cliente = cliente.rename(
+            columns={'codice_cli': 'codice_bms'})
+        check = "SELECT codice_bms, ragione_sociale FROM cliente"
+        keys = ['codice_bms', 'ragione_sociale']
+        check_df = pd.read_sql(sql=check, con=engine)
+        cliente = cliente.loc[
+            cliente[keys].merge(check_df[keys], on=keys, how='left', indicator=True)['_merge'] == 'left_only']
+        return cliente
+    except Exception as error:
+        print(error, flush=True)
 
 def is_cliente_present(codice_bms):
     try:
@@ -77,15 +92,24 @@ def format_data(data):
 
 def insert_data(df):
     string = ''
+
+    # Articolo
     articolo = clean_df_for_articolo(df)
     try:
         res = articolo.to_sql(name='articolo', con=engine, schema='public', if_exists='append', index=False)
-        string = string + ' Inseriti '+str(res)+' nuovi articoli'
+        string = string + ' Inseriti ' + str(res) + ' nuovi articoli'
     except Exception as e:
         print(e, flush=True)
 
+    # Cliente
+    cliente = clean_df_for_cliente(df)
+    try:
+        res = cliente.to_sql(name='cliente', con=engine, schema='public', if_exists='append', index=False)
+        string = string + ' Inseriti ' + str(res) + ' nuovi clienti'
+    except Exception as e:
+        print(e, flush=True)
 
-
+    #Fattura
     return string
 
     # for index, row in df.iterrows():
