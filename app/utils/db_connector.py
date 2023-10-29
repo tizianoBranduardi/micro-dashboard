@@ -2,22 +2,11 @@ import psycopg2
 from sqlalchemy import create_engine
 
 #Locals :
-# conn = psycopg2.connect(
-#     host="localhost",
-#     port="5434",
-#     database="micro_dashboard",
-#     user="postgres",
-#     password="postgres")
 
 engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5434/micro_dashboard')
 
 # Containers :
-# conn = psycopg2.connect(
-#     host="db",
-#     database="micro_dashboard",
-#     user="postgres",
-#     password="postgres")
-#
+
 # engine = create_engine('postgresql+psycopg2://postgres:postgres@micro-dashboard_db_1/micro_dashboard')
 
 query_homepage = 'SELECT F.codice AS CodiceFattura, F.data AS DataFattura, A.codice AS CodiceArticolo, A.descrizione AS DescrizioneArticolo, A_F.quantita, A_F.prezzo\
