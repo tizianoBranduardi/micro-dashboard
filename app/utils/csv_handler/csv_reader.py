@@ -25,13 +25,11 @@ def insert_data(df):
     fattura_inserted = insert_fattura(fattura)
     print(fattura_inserted)
 
-    # Articolo in fattura
-    articolo_in_fattura = clean_df_for_articolo_in_fattura(df)
-    articolo_in_fattura_inserted = insert_articolo_in_fattura(articolo_in_fattura)
-    print(articolo_in_fattura_inserted)
+    # # Articolo in fattura
+    # articolo_in_fattura = clean_df_for_articolo_in_fattura(df)
+    # articolo_in_fattura_inserted = insert_articolo_in_fattura(articolo_in_fattura)
+    # print(articolo_in_fattura_inserted)
 
-
-    # string = string + ' ' + articolo_inserted + ' ' + cliente_inserted + ' ' + fattura_inserted + ' ' + articolo_in_fattura_inserted
     return string
 
 

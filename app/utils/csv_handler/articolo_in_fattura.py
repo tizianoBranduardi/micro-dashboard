@@ -36,13 +36,6 @@ def clean_df_for_articolo_in_fattura(df):
         articolo_in_fattura['prezzo'] = articolo_in_fattura['prezzo'].apply(lambda x: x.replace(',', '.'))
         articolo_in_fattura['prezzo'] = articolo_in_fattura['prezzo'].astype(float)
 
-        # check = (check_query)
-        # keys = ['codice_articolo_fk', 'codice_fattura_fk', 'quantita',
-        #         'data_fattura_fk', 'descrizione_articolo_fk', 'prezzo']
-        # check_df = pd.read_sql(sql=check, con=engine)
-        # articolo_in_fattura = articolo_in_fattura.loc[
-        #     articolo_in_fattura[keys].merge(check_df[keys], on=keys, how='left', indicator=True)[
-        #         '_merge'] == 'left_only']
         return articolo_in_fattura.dropna()
     except Exception as error:
         print(error, flush=True)
@@ -50,16 +43,9 @@ def clean_df_for_articolo_in_fattura(df):
 
 def insert_articolo_in_fattura(articolo_in_fattura):
     try:
-        # res = insert_or_ignore(articolo_in_fattura, 'articolo_in_fattura',
-        #                        keys=['codice_articolo_fk', 'codice_fattura_fk', 'quantita', 'data_fattura_fk',
-        #                         'descrizione_articolo_fk', 'prezzo'],
-        #                        fields=['codice_articolo_fk', 'codice_fattura_fk', 'quantita', 'data_fattura_fk',
-        #                         'descrizione_articolo_fk', 'prezzo'])
         res = articolo_in_fattura.to_sql(name='articolo_in_fattura', con=engine, schema='public', if_exists='append',
                                          index=False)
         return 'Inseriti ' + str(res) + ' nuovi articoli in fattura'
-    except psycopg2.errors.UniqueViolation as e:
-        return 'Inseriti 0 nuovi articoli in fattura'
     except Exception as e:
         #print(e, flush=True)
         return 'Inseriti 0 nuovi articoli in fattura'
