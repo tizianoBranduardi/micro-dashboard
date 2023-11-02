@@ -43,4 +43,4 @@ def insert_into_db(df):
         row_df.loc[0] = row
         insert_data(row_df)
 
-    return html.H5("Dati aggiornati correttamente" - " + res")
+    return html.H5("Dati aggiornati correttamente")

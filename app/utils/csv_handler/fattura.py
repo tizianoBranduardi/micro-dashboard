@@ -1,7 +1,6 @@
 import psycopg2
 import pandas as pd
 from utils.db_connector import engine
-from utils.csv_handler.update_handler import *
 from utils.csv_handler.date_format import format_date
 pd.options.mode.chained_assignment = None  # default='warn'
 
