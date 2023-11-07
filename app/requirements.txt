@@ -6,3 +6,4 @@ psycopg2
 pymysql
 SQLAlchemy
 openpyxl
+dash-bootstrap-components

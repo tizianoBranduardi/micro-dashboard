@@ -3,9 +3,8 @@ import pandas as pd
 from utils.db_connector import engine
 pd.options.mode.chained_assignment = None  # default='warn'
 
-csv_columns = ['codice_cli', 'ragione_sociale']
-db_attributes_map = {'codice_cli': 'codice_bms'}
-check_query = "SELECT codice_bms FROM cliente"
+csv_columns = ['NCOCG.1', 'TRASO.1', 'AGENTE']
+db_attributes_map = {'NCOCG.1': 'codice_bms', 'TRASO.1': 'ragione_sociale', 'AGENTE': 'commerciale'}
 
 def clean_df_for_cliente(df):
     try:
@@ -23,5 +22,5 @@ def insert_cliente(cliente):
         return 'Inseriti ' + str(res) + ' nuovi clienti'
     except Exception as e:
         #print(e, flush=True)
-        return 'Inseriti 0 nuovi clienti'
+        return 'Nessun cliente inserito'
 
