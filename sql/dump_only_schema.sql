@@ -181,6 +181,24 @@ CREATE TABLE public.articolo (
 ALTER TABLE public.articolo OWNER TO postgres;
 
 --
+-- Name: articolo_in_bolla; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.articolo_in_bolla (
+    codice_articolo_fk character varying(255) NOT NULL,
+    descrizione_articolo_fk character varying(255) NOT NULL,
+    causale_bolla_fk character varying(255) NOT NULL,
+    tipo_bolla_fk character varying(255) NOT NULL,
+    numero_bolla_fk integer NOT NULL,
+    unita_misura character varying(255),
+    numero_unita numeric,
+    prezzo_unitario numeric
+);
+
+
+ALTER TABLE public.articolo_in_bolla OWNER TO postgres;
+
+--
 -- Name: articolo_in_fattura; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -195,6 +213,26 @@ CREATE TABLE public.articolo_in_fattura (
 
 
 ALTER TABLE public.articolo_in_fattura OWNER TO postgres;
+
+--
+-- Name: bolla; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.bolla (
+    causale character varying(255) NOT NULL,
+    tipo character varying(255) NOT NULL,
+    numero integer NOT NULL,
+    data date,
+    cliente_fk integer,
+    codice_fattura_fk character varying(255),
+    data_fattura_fk date,
+    pagamento character varying(255),
+    trasporto character varying(255),
+    vettore character varying(255)
+);
+
+
+ALTER TABLE public.bolla OWNER TO postgres;
 
 --
 -- Name: cliente; Type: TABLE; Schema: public; Owner: postgres
@@ -234,6 +272,14 @@ CREATE TABLE public.fattura (
 ALTER TABLE public.fattura OWNER TO postgres;
 
 --
+-- Name: articolo_in_bolla articolo_in_bolla_codice_articolo_fk_descrizione_articolo_f_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.articolo_in_bolla
+    ADD CONSTRAINT articolo_in_bolla_codice_articolo_fk_descrizione_articolo_f_key UNIQUE (codice_articolo_fk, descrizione_articolo_fk, causale_bolla_fk, tipo_bolla_fk, numero_bolla_fk, unita_misura, numero_unita);
+
+
+--
 -- Name: articolo_in_fattura articolo_in_fattura_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -247,6 +293,14 @@ ALTER TABLE ONLY public.articolo_in_fattura
 
 ALTER TABLE ONLY public.articolo
     ADD CONSTRAINT articolo_pkey PRIMARY KEY (codice, descrizione);
+
+
+--
+-- Name: bolla bolla_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.bolla
+    ADD CONSTRAINT bolla_pkey PRIMARY KEY (causale, tipo, numero);
 
 
 --
@@ -266,6 +320,22 @@ ALTER TABLE ONLY public.fattura
 
 
 --
+-- Name: articolo_in_bolla articolo_in_bolla_causale_bolla_fk_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.articolo_in_bolla
+    ADD CONSTRAINT articolo_in_bolla_causale_bolla_fk_fkey FOREIGN KEY (causale_bolla_fk, tipo_bolla_fk, numero_bolla_fk) REFERENCES public.bolla(causale, tipo, numero);
+
+
+--
+-- Name: articolo_in_bolla articolo_in_bolla_codice_articolo_fk_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.articolo_in_bolla
+    ADD CONSTRAINT articolo_in_bolla_codice_articolo_fk_fkey FOREIGN KEY (codice_articolo_fk, descrizione_articolo_fk) REFERENCES public.articolo(codice, descrizione);
+
+
+--
 -- Name: articolo_in_fattura articolo_in_fattura_codice_articolo_fk_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -279,6 +349,22 @@ ALTER TABLE ONLY public.articolo_in_fattura
 
 ALTER TABLE ONLY public.articolo_in_fattura
     ADD CONSTRAINT articolo_in_fattura_codice_fattura_fk_fkey FOREIGN KEY (codice_fattura_fk, data_fattura_fk) REFERENCES public.fattura(codice, data);
+
+
+--
+-- Name: bolla bolla_cliente_fk_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.bolla
+    ADD CONSTRAINT bolla_cliente_fk_fkey FOREIGN KEY (cliente_fk) REFERENCES public.cliente(codice_bms);
+
+
+--
+-- Name: bolla bolla_codice_fattura_fk_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.bolla
+    ADD CONSTRAINT bolla_codice_fattura_fk_fkey FOREIGN KEY (codice_fattura_fk, data_fattura_fk) REFERENCES public.fattura(codice, data);
 
 
 --
