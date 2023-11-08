@@ -1,7 +1,7 @@
 import psycopg2
 from sqlalchemy import create_engine
 
-#Locals :
+# Locals :
 
 engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5434/micro_dashboard')
 
@@ -50,3 +50,14 @@ query_fatturato_famiglia = 'WITH temp as (SELECT A.famiglia, A_F.quantita * A_F.
                             SELECT famiglia, SUM(total) as total\
                             FROM temp AS T\
                             GROUP BY T.famiglia'
+
+query_bolle = ('SELECT B.causale, B.tipo, B.numero, B.data, C.ragione_sociale, AB.codice_articolo_fk, '
+               ' AB.descrizione_articolo_fk, B.pagamento, B.trasporto, B.vettore'
+               ' FROM public.articolo_in_bolla as AB'
+               ' JOIN public.bolla AS B ON AB.causale_bolla_fk = B.causale AND AB.tipo_bolla_fk = B.tipo AND '
+               ' AB.numero_bolla_fk = B.numero'
+               ' JOIN public.cliente AS C ON C.codice_bms = B.cliente_fk')
+
+query_articolo = 'SELECT * FROM public.articolo'
+
+query_cliente = 'SELECT codice_bms, ragione_sociale, commerciale FROM public.cliente'

@@ -33,6 +33,7 @@ layout = html.Div([
     html.Div(id='output-data-upload'),
 ])
 
+
 def parse_contents(contents, filename, date):
     global df
     content_type, content_string = contents.split(',')
@@ -58,11 +59,19 @@ def parse_contents(contents, filename, date):
         dash_table.DataTable(
             df.to_dict('records'),
             [{'name': i, 'id': i} for i in df.columns],
-            sort_action="native",
-            sort_mode='multi',
+            editable=False,
             filter_action="native",
-            filter_options={"placeholder_text": "Filter column..."},
-            page_size=20
+            sort_action="native",
+            sort_mode="multi",
+            column_selectable="single",
+            row_selectable="multi",
+            row_deletable=False,
+            selected_columns=[],
+            selected_rows=[],
+            page_action="native",
+            page_current=0,
+            page_size=20,
+            filter_options={"placeholder_text": "Filtro ..."}
         ),
 
         html.Hr(),
@@ -77,11 +86,12 @@ def parse_contents(contents, filename, date):
         ])
     ])
 
+
 @callback(
     [Output('container-button-timestamp', 'children')],
     [Input('uploadButton', 'n_clicks')]
 )
-def displayClick(n_clicks):
+def display_click(n_clicks):
     if "uploadButton" == ctx.triggered_id:
         columns_list = df.columns.tolist()
         for row in df.values:
@@ -90,6 +100,7 @@ def displayClick(n_clicks):
             insert_into_db(row_df)
         return html.H5("Dati Inseriti")
     return html.H5("")
+
 
 @callback(Output('output-data-upload', 'children'),
           Input('upload-data', 'contents'),

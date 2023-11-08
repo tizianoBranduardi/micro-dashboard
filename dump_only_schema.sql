@@ -272,6 +272,14 @@ CREATE TABLE public.fattura (
 ALTER TABLE public.fattura OWNER TO postgres;
 
 --
+-- Name: articolo_in_bolla articolo_in_bolla_codice_articolo_fk_descrizione_articolo_f_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.articolo_in_bolla
+    ADD CONSTRAINT articolo_in_bolla_codice_articolo_fk_descrizione_articolo_f_key UNIQUE (codice_articolo_fk, descrizione_articolo_fk, causale_bolla_fk, tipo_bolla_fk, numero_bolla_fk, unita_misura, numero_unita);
+
+
+--
 -- Name: articolo_in_fattura articolo_in_fattura_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 

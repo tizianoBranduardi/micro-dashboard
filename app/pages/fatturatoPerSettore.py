@@ -14,20 +14,25 @@ colors = {
 }
 
 
-fatturato_per_settore = pd.read_sql(query_fatturato_settore, engine)
+def serve_layout():
+    fatturato_per_settore = pd.read_sql(query_fatturato_settore, engine)
 
-layout = html.Div(
-    children=[
-        html.Br(),
-        html.H4(
-            children="Fatturato per settore"
-        ),
-        dash_table.DataTable(fatturato_per_settore.to_dict('records'),
-                            [{"name": i, "id": i} for i in fatturato_per_settore.columns],
-                            sort_action="native",
-                            sort_mode='multi',
-                            filter_action="native",
-                            filter_options={"placeholder_text": "Filter column..."},
-                            page_size=20,),
-    ]
-)
+    layout = html.Div(
+        children=[
+            html.Br(),
+            html.H4(
+                children="Fatturato per settore"
+            ),
+            dash_table.DataTable(fatturato_per_settore.to_dict('records'),
+                                 [{"name": i, "id": i} for i in fatturato_per_settore.columns],
+                                 sort_action="native",
+                                 sort_mode='multi',
+                                 filter_action="native",
+                                 filter_options={"placeholder_text": "Filter column..."},
+                                 page_size=20, ),
+        ]
+    )
+    return layout
+
+
+layout = serve_layout

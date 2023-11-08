@@ -14,20 +14,26 @@ colors = {
 }
 
 
-fatturato_per_paese = pd.read_sql(query_fatturato_paese, engine)
+def serve_layout():
+    fatturato_per_paese = pd.read_sql(query_fatturato_paese, engine)
 
-layout = html.Div(
-    children=[
-        html.Br(),
-        html.H4(
-            children="Fatturato per paese"
-        ),
-        dash_table.DataTable(fatturato_per_paese.to_dict('records'),
-                            [{"name": i, "id": i} for i in fatturato_per_paese.columns],
-                            sort_action="native",
-                            sort_mode='multi',
-                            filter_action="native",
-                            filter_options={"placeholder_text": "Filter column..."},
-                            page_size=20,),
-    ]
-)
+    layout = html.Div(
+        children=[
+            html.Br(),
+            html.H4(
+                children="Fatturato per paese"
+            ),
+            dash_table.DataTable(fatturato_per_paese.to_dict('records'),
+                                 [{"name": i, "id": i} for i in fatturato_per_paese.columns],
+                                 sort_action="native",
+                                 sort_mode='multi',
+                                 filter_action="native",
+                                 filter_options={"placeholder_text": "Filter column..."},
+                                 page_size=20, ),
+        ]
+    )
+
+    return layout
+
+
+layout = serve_layout
