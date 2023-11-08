@@ -1,12 +1,10 @@
-import os
 import io
 import dash
 import base64
-import datetime
 import pandas as pd
-import plotly.express as px
+import dash_bootstrap_components as dbc
 from utils.csv_handler.csv_reader import insert_into_db
-from dash import Dash, dcc, html, dash_table, Input, Output, State, callback, ctx
+from dash import dcc, html, dash_table, Input, Output, State, callback, ctx
 
 dash.register_page(__name__)
 
@@ -51,12 +49,11 @@ def parse_contents(contents, filename, date):
     except Exception as e:
         print(e)
         return html.Div([
-            'There was an error processing this file.' + e
+            'There was an error processing this file.'
         ])
 
     return html.Div([
         html.H5(filename),
-        #html.H6(datetime.datetime.fromtimestamp(date)),
 
         dash_table.DataTable(
             df.to_dict('records'),
@@ -72,26 +69,32 @@ def parse_contents(contents, filename, date):
 
         html.Div([
             html.Button('Upload', id='uploadButton', n_clicks=0),
-            html.Div(id='container-button-timestamp')
+            dcc.Loading(
+                id="loading-2",
+                children=[html.Div(id='container-button-timestamp')],
+                type="circle",
+            )
         ])
     ])
 
 @callback(
-    Output('container-button-timestamp', 'children'),
-    Input('uploadButton', 'n_clicks')
+    [Output('container-button-timestamp', 'children')],
+    [Input('uploadButton', 'n_clicks')]
 )
-
-def displayClick(btn1):
-    print("None of the buttons have been clicked yet")
+def displayClick(n_clicks):
     if "uploadButton" == ctx.triggered_id:
-        return html.Div([insert_into_db(df)])
+        columns_list = df.columns.tolist()
+        for row in df.values:
+            row_df = pd.DataFrame(columns=columns_list, index=[0])
+            row_df.loc[0] = row
+            insert_into_db(row_df)
+        return html.H5("Dati Inseriti")
     return html.H5("")
 
 @callback(Output('output-data-upload', 'children'),
-              Input('upload-data', 'contents'),
-              State('upload-data', 'filename'),
-              State('upload-data', 'last_modified'))
-              
+          Input('upload-data', 'contents'),
+          State('upload-data', 'filename'),
+          State('upload-data', 'last_modified'))
 def update_output(list_of_contents, list_of_names, list_of_dates):
     if list_of_contents is not None:
         children = [

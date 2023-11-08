@@ -19,16 +19,17 @@ server = app.server
 def serve_layout():
         return html.Div(children=[
             html.Div(
-            children=[
-                html.H1(
-                    children=f"BigDB - {'Versione di sviluppo' if debug else 'Versione di produzione'}"
-                ),
-                html.Div([
-                    html.Div(
-                        dcc.Link(f"{page['name']} - {page['path']}", href=page["relative_path"])
-                    ) for page in dash.page_registry.values()
-                ]),
-                dash.page_container
+                className="container",
+                children=[
+                    html.H1(
+                        children=f"BigDB - {'Versione di sviluppo' if debug else 'Versione di produzione'}"
+                    ),
+                    html.Div([
+                        html.Div(
+                            dcc.Link(f"{page['name']} - {page['path']}", href=page["relative_path"])
+                        ) for page in dash.page_registry.values()
+                    ]),
+                    dash.page_container
                 ]
             )
         ])
