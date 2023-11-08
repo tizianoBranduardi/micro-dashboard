@@ -77,7 +77,12 @@ def parse_contents(contents, filename, date):
         html.Hr(),
 
         html.Div([
-            html.Button('Upload', id='uploadButton', n_clicks=0),
+            html.Div(
+                [
+                    dbc.Button("Upload", color="primary", id='uploadButton', n_clicks=0),
+                ],
+                className="d-grid gap-2",
+            ),
             dcc.Loading(
                 id="loading-2",
                 children=[html.Div(id='container-button-timestamp')],
@@ -85,7 +90,6 @@ def parse_contents(contents, filename, date):
             )
         ])
     ])
-
 
 @callback(
     [Output('container-button-timestamp', 'children')],

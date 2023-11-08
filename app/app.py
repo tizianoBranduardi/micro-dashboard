@@ -11,7 +11,7 @@ except:
 
 external_stylesheets = [dbc.themes.BOOTSTRAP]
 
-app = Dash(__name__, use_pages=True, external_stylesheets=external_stylesheets)
+app = Dash(__name__, use_pages=True, external_stylesheets=external_stylesheets, suppress_callback_exceptions=True)
 
 server = app.server
 
@@ -38,4 +38,4 @@ def serve_layout():
 app.layout = serve_layout
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port="8050", debug=debug, threaded=True)
+    app.run(host="0.0.0.0", port=8050, debug=debug, threaded=True)
