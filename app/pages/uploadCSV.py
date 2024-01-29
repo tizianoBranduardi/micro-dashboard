@@ -91,6 +91,7 @@ def parse_contents(contents, filename, date):
         ])
     ])
 
+
 @callback(
     [Output('container-button-timestamp', 'children')],
     [Input('uploadButton', 'n_clicks')]

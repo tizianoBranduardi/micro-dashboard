@@ -3,17 +3,23 @@ from sqlalchemy import create_engine
 
 # Locals :
 
-# engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5434/micro_dashboard')
+engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5434/micro_dashboard')
 
 # Containers :
 
-engine = create_engine('postgresql+psycopg2://postgres:postgres@db/micro_dashboard')
+# engine = create_engine('postgresql+psycopg2://postgres:postgres@db/micro_dashboard')
 
 query_homepage = 'SELECT F.codice AS CodiceFattura, F.data AS DataFattura, A.codice AS CodiceArticolo, A.descrizione AS DescrizioneArticolo, A_F.quantita, A_F.prezzo\
                 FROM fattura AS F\
                 JOIN articolo_in_fattura AS A_F ON F.data = A_F.data_fattura_fk AND F.codice = A_F.codice_fattura_fk\
                 JOIN articolo AS A ON A.codice = A_F.codice_articolo_fk AND A.descrizione = A_F.descrizione_articolo_fk\
                 JOIN cliente AS C ON F.cliente_fk = C.codice_bms'
+
+query_fatturato = 'SELECT C.ragione_sociale, F.data, A_F.quantita * A_F.prezzo as total\
+                FROM public.fattura AS F\
+                JOIN public.articolo_in_fattura AS A_F ON F.data = A_F.data_fattura_fk AND F.codice = A_F.codice_fattura_fk\
+                JOIN public.articolo AS A ON A.codice = A_F.codice_articolo_fk AND A.descrizione =A_F.descrizione_articolo_fk\
+                JOIN public.cliente AS C ON F.cliente_fk = C.codice_bms'
 
 query_fatturato_cliente = 'WITH temp as (SELECT C.ragione_sociale, A_F.quantita * A_F.prezzo as total\
                 FROM public.fattura AS F\
