@@ -1,10 +1,8 @@
-import os
 import dash
-from dash import Dash, html, dcc, dash_table, callback, Output, Input
-import plotly.express as px
 import pandas as pd
+import plotly.express as px
+from dash import html, dcc, dash_table, callback, Output, Input
 from utils.db_connector import engine, query_fatturato
-from dateutil.parser import parse
 
 dash.register_page(__name__)
 
@@ -13,13 +11,11 @@ colors = {
     'text': '#7FDBFF'
 }
 
-
 sales = pd.read_sql(query_fatturato, engine)
 sales['data'] = pd.to_datetime(sales['data'], format='%Y/%m/%d', utc=False)
 
 clienti = sales["ragione_sociale"].sort_values().unique()
-date = sales["data"].sort_values().unique()
-
+dates = sales["data"].sort_values().unique()
 
 layout = html.Div(
     children=[
@@ -27,46 +23,27 @@ layout = html.Div(
         html.H4(
             children="Fatturato"
         ),
-        dash_table.DataTable(sales.to_dict('records'),
-                             [{"name": i, "id": i} for i in sales.columns],
-                             sort_action="native",
-                             sort_mode='multi',
-                             filter_action="native",
-                             filter_options={"placeholder_text": "Filter column..."},
-                             page_size=5, ),
         html.Div(
             children=[
-                # html.Div(
-                #     children=[
-                #         html.Div(children="Clienti", className="menu-title"),
-                #         dcc.Dropdown(
-                #             id="region-filter",
-                #             options=[
-                #                 {"label": cliente, "value": cliente}
-                #                 for cliente in clienti
-                #             ],
-                #             clearable=False,
-                #             className="dropdown",
-                #         ),
-                #     ]
-                # ),
                 html.Div(
-                    children=[
-                        html.Div(
-                            children="Date"  # , className="menu-title"
-                        ),
-                        dcc.DatePickerRange(
-                            id="date-range",
-                            min_date_allowed=sales["data"].min(),
-                            max_date_allowed=sales["data"].max(),
-                            start_date=sales["data"].min(),
-                            end_date=sales["data"].max(),
-                        ),
-                    ]
+                    children="Date"  # , className="menu-title"
                 ),
-            ],
-            className="menu",
+                dcc.DatePickerRange(
+                    id="date-range",
+                    min_date_allowed=sales["data"].min(),
+                    max_date_allowed=sales["data"].max(),
+                    start_date=sales["data"].min(),
+                    end_date=sales["data"].max(),
+                ),
+            ]
         ),
+        html.Br(),
+        # dash_table.DataTable(id="sales_table",
+        #                      sort_action="native",
+        #                      sort_mode='multi',
+        #                      filter_action="native",
+        #                      filter_options={"placeholder_text": "Filter column..."},
+        #                      page_size=5, ),
         html.Div(
             children=[
                 html.Div(
@@ -99,15 +76,17 @@ def update_sale_graph(start_date, end_date):
     if not start_date or not end_date:
         raise dash.exceptions.PreventUpdate
     else:
-        mask = (sales['data'] > start_date) & (sales['data'] <= end_date)
+        mask = (sales['data'] >= start_date) & (sales['data'] <= end_date)
         sales_filtered = sales.loc[mask]
         sales_per_year_filtered = (sales_filtered.groupby(sales_filtered.data.dt.year)['total'].sum()
                                    .reset_index()  # Rimozione multi index
                                    .rename(columns={'data': 'Anno', 'total': 'Totale'}))
+        print(sales_per_year_filtered)
         return px.bar(sales_per_year_filtered,
                       title="Fatturato",
                       x='Anno',
-                      y='Totale')
+                      y='Totale',
+                      text_auto=True)
 
 
 @callback(
@@ -132,4 +111,32 @@ def update_quarter_graph(start_date, end_date):
                       color='Quarter',
                       barmode="group",
                       x='Anno',
-                      y='Totale')
+                      y='Totale',
+                      text="Quarter")
+
+
+# @callback(
+#     [Output("sales_table", "data"),
+#      Output("sales_table", "columns")],
+#     [Input("date-range", "start_date"),
+#      Input("date-range", "end_date")]
+# )
+# def update_sales_table(start_date, end_date):
+#     if not start_date or not end_date:
+#         raise dash.exceptions.PreventUpdate
+#     else:
+#         mask = (sales['data'] > start_date) & (sales['data'] <= end_date)
+#         sales_filtered = sales.loc[mask]
+#         sales_filtered = (sales_filtered.groupby(sales_filtered.data.dt.to_period('M'))['total'].sum()
+#                           .reset_index()  # Rimozione multi index
+#                           .rename(columns={'data': 'Anno', 'total': 'Totale'}))
+#         sales_filtered['Mese'] = sales_filtered['Anno'].astype(str).str[-2:]
+#         sales_filtered['Anno'] = sales_filtered['Anno'].astype(str).str[:4]
+#         sales_filtered = pd.pivot_table(sales_filtered, index=['Anno'], columns=['Mese'])
+#         print(sales_filtered.reset_index())
+#         columns = sales_filtered.columns#[{"name": i, "id": i} for i in sales_filtered.columns]
+#         data = sales_filtered.reset_index()
+#
+#         columns = [{'name': col, 'id': col} for col in sales_filtered.columns]
+#         data = sales_filtered.to_dict(orient='records')
+#         return data, columns
