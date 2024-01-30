@@ -11,57 +11,41 @@ colors = {
 
 
 def serve_layout():
-    left_column = dbc.Col(
-        html.Div([
-            html.Div([
-                dbc.Button("Report Fatturato",
-                           # dash.page_registry['pages.home']['name'],
-                           href=dash.page_registry['pages.fatturato']["relative_path"],
-                           outline=True,
-                           color="primary",
-                           className="me-1")
-            ],
-                style={'width': '100 %', 'display': 'flex', 'align - items': 'center', 'justify - content': 'center'}
-            ),
-            html.Br(),
-            html.Div([
-                dbc.Button(dash.page_registry['pages.home']['name'],
-                           href=dash.page_registry['pages.home']["relative_path"],
-                           outline=True,
-                           color="primary",
-                           className="me-1",
-                           disabled=True)
-            ],
-                style={'width': '100 %', 'display': 'flex', 'align - items': 'center', 'justify - content': 'center'}
-            ),
-        ]),
-        align="center"
+    left_column = html.Div([
+        dbc.Button("Report Fatturato",
+                   # dash.page_registry['pages.home']['name'],
+                   href=dash.page_registry['pages.fatturato']["relative_path"],
+                   outline=True,
+                   color="primary",
+                   className="me-1"),
+        dbc.Button(dash.page_registry['pages.home']['name'],
+                   href=dash.page_registry['pages.home']["relative_path"],
+                   outline=True,
+                   color="primary",
+                   className="me-1",
+                   disabled=True)
+        ],
+        className="d-grid gap-2 col-6 mx-auto"
     )
 
-    right_column = dbc.Col(
-        html.Div([
-            html.Div([
-                dbc.Button("Upload CSV",
-                           # dash.page_registry['pages.home']['name'],
-                           href=dash.page_registry['pages.uploadCSV']["relative_path"],
-                           outline=True,
-                           color="primary",
-                           className="me-1")
-            ]),
-            html.Br(),
-            html.Div([
-                dbc.Button(dash.page_registry['pages.home']['name'],
-                           href=dash.page_registry['pages.home']["relative_path"],
-                           outline=True,
-                           color="primary",
-                           className="me-1",
-                           disabled=True)
-            ]),
-        ]),
-        md=6,
+    right_column = html.Div([
+        dbc.Button("Upload CSV",
+                   # dash.page_registry['pages.home']['name'],
+                   href=dash.page_registry['pages.uploadCSV']["relative_path"],
+                   outline=True,
+                   color="primary",
+                   className="me-1"),
+        dbc.Button(dash.page_registry['pages.home']['name'],
+                   href=dash.page_registry['pages.home']["relative_path"],
+                   outline=True,
+                   color="primary",
+                   className="me-1",
+                   disabled=True)
+    ],
+        className="d-grid gap-2 col-6 mx-auto"
     )
 
-    return dbc.Row([left_column, right_column], className="align-items-md-stretch")
+    return dbc.Row([left_column, right_column], )
 
 
 layout = serve_layout
