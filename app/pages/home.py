@@ -14,8 +14,9 @@ def serve_layout():
     left_column = dbc.Col(
         html.Div([
             html.Div([
-                dbc.Button(dash.page_registry['pages.home']['name'],
-                           href=dash.page_registry['pages.home']["relative_path"],
+                dbc.Button("Report Fatturato",
+                           # dash.page_registry['pages.home']['name'],
+                           href=dash.page_registry['pages.fatturato']["relative_path"],
                            outline=True,
                            color="primary",
                            className="me-1")
@@ -28,7 +29,8 @@ def serve_layout():
                            href=dash.page_registry['pages.home']["relative_path"],
                            outline=True,
                            color="primary",
-                           className="me-1")
+                           className="me-1",
+                           disabled=True)
             ],
                 style={'width': '100 %', 'display': 'flex', 'align - items': 'center', 'justify - content': 'center'}
             ),
@@ -39,8 +41,9 @@ def serve_layout():
     right_column = dbc.Col(
         html.Div([
             html.Div([
-                dbc.Button(dash.page_registry['pages.home']['name'],
-                           href=dash.page_registry['pages.home']["relative_path"],
+                dbc.Button("Upload CSV",
+                           # dash.page_registry['pages.home']['name'],
+                           href=dash.page_registry['pages.uploadCSV']["relative_path"],
                            outline=True,
                            color="primary",
                            className="me-1")
@@ -51,7 +54,8 @@ def serve_layout():
                            href=dash.page_registry['pages.home']["relative_path"],
                            outline=True,
                            color="primary",
-                           className="me-1")
+                           className="me-1",
+                           disabled=True)
             ]),
         ]),
         md=6,

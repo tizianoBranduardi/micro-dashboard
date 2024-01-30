@@ -53,11 +53,6 @@ def serve_layout():
         html.Div(
             className="container",
             children=[
-                # html.Div([
-                #     dbc.Button(page['name'], href=page["relative_path"], outline=True, color="primary",
-                #                className="me-1")
-                #     for page in dash.page_registry.values()
-                # ]),
                 dash.page_container
             ]
         )

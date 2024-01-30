@@ -103,8 +103,8 @@ def display_click(n_clicks):
             row_df = pd.DataFrame(columns=columns_list, index=[0])
             row_df.loc[0] = row
             insert_into_db(row_df)
-        return html.H5("Dati Inseriti")
-    return html.H5("")
+        return [html.H5("Dati Inseriti")]
+    return [html.H5("")]
 
 
 @callback(Output('output-data-upload', 'children'),
