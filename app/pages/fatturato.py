@@ -86,7 +86,7 @@ def update_sale_graph(start_date, end_date):
                       title="Fatturato",
                       x='Anno',
                       y='Totale',
-                      text_auto=True)
+                      text_auto=True).update_xaxes(type='category')
 
 
 @callback(
