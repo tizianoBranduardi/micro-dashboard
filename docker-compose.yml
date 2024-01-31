@@ -4,6 +4,7 @@ version: '3.9'
 services:
   db:
     image: postgres:11
+    container_name: micro_db_database
     environment:
       POSTGRES_DB: micro_dashboard
       POSTGRES_PASSWORD: postgres
@@ -19,6 +20,7 @@ services:
   #   build:
   #     context: .
   #     dockerfile: Dockerfile.dev #Rimuovere .dev per andare in produzione
+  #   container_name: micro_db_dashboard
   #   restart: always
   #   ports:
   #     - 8050:8050
@@ -28,7 +30,8 @@ services:
   #       - db
 
   phppgadmin:
-    #restart: always
+    restart: always
+    container_name: micro_db_phppgadmin
     image: dockage/phppgadmin:latest
     ports:
     - "8888:80"
