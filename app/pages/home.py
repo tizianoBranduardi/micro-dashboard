@@ -12,26 +12,23 @@ colors = {
 
 def serve_layout():
     left_column = html.Div([
-        dbc.Button("Report Fatturato",
-                   # dash.page_registry['pages.home']['name'],
-                   href=dash.page_registry['pages.fatturato']["relative_path"],
+        dbc.Button("Report Fatturato - Scope anno",
+                   href=dash.page_registry['pages.fatturato_annuale']["relative_path"],
                    outline=True,
                    color="primary",
                    className="me-1"),
-        dbc.Button(dash.page_registry['pages.home']['name'],
-                   href=dash.page_registry['pages.home']["relative_path"],
+        dbc.Button("Upload CSV",
+                   href=dash.page_registry['pages.uploadCSV']["relative_path"],
                    outline=True,
                    color="primary",
-                   className="me-1",
-                   disabled=True)
+                   className="me-1")
         ],
         className="d-grid gap-2 col-6 mx-auto"
     )
 
     right_column = html.Div([
-        dbc.Button("Upload CSV",
-                   # dash.page_registry['pages.home']['name'],
-                   href=dash.page_registry['pages.uploadCSV']["relative_path"],
+        dbc.Button("Report Fatturato - Scope mese",
+                   href=dash.page_registry['pages.fatturato_mensile']["relative_path"],
                    outline=True,
                    color="primary",
                    className="me-1"),

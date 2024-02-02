@@ -21,8 +21,30 @@ layout = html.Div(
     children=[
         html.Br(),
         html.H4(
-            children="Fatturato"
+            children="Analisi Fatturato - Scope anno"
         ),
+        html.Br(),
+        # dcc.RangeSlider(
+        #     min=1,
+        #     max=12,
+        #     step=None,
+        #     marks={
+        #         1: 'Gennaio',
+        #         2: 'Febbraio',
+        #         3: 'Marzo',
+        #         4: 'Aprile',
+        #         5: 'Maggio',
+        #         6: 'Giugno',
+        #         7: 'Luglio',
+        #         8: 'Agosto',
+        #         9: 'Settembre',
+        #         10: 'Ottobre',
+        #         11: 'Novembre',
+        #         12: 'Dicembre',
+        #     },
+        #     value=[1, 12],
+        #     allowCross=False
+        # ),
         html.Div(
             children=[
                 html.Div(
@@ -53,13 +75,15 @@ layout = html.Div(
                     ),
                     className="card",
                 ),
+                html.Br(),
                 html.Div(
                     children=dcc.Graph(
                         id="quarter_graph",
                         config={"displayModeBar": False},
                     ),
                     className="card",
-                )
+                ),
+                html.Br()
             ],
             className="wrapper",
         ),
@@ -81,7 +105,6 @@ def update_sale_graph(start_date, end_date):
         sales_per_year_filtered = (sales_filtered.groupby(sales_filtered.data.dt.year)['total'].sum()
                                    .reset_index()  # Rimozione multi index
                                    .rename(columns={'data': 'Anno', 'total': 'Totale'}))
-        print(sales_per_year_filtered)
         return px.bar(sales_per_year_filtered,
                       title="Fatturato",
                       x='Anno',
@@ -114,29 +137,3 @@ def update_quarter_graph(start_date, end_date):
                       y='Totale',
                       text="Quarter")
 
-
-# @callback(
-#     [Output("sales_table", "data"),
-#      Output("sales_table", "columns")],
-#     [Input("date-range", "start_date"),
-#      Input("date-range", "end_date")]
-# )
-# def update_sales_table(start_date, end_date):
-#     if not start_date or not end_date:
-#         raise dash.exceptions.PreventUpdate
-#     else:
-#         mask = (sales['data'] > start_date) & (sales['data'] <= end_date)
-#         sales_filtered = sales.loc[mask]
-#         sales_filtered = (sales_filtered.groupby(sales_filtered.data.dt.to_period('M'))['total'].sum()
-#                           .reset_index()  # Rimozione multi index
-#                           .rename(columns={'data': 'Anno', 'total': 'Totale'}))
-#         sales_filtered['Mese'] = sales_filtered['Anno'].astype(str).str[-2:]
-#         sales_filtered['Anno'] = sales_filtered['Anno'].astype(str).str[:4]
-#         sales_filtered = pd.pivot_table(sales_filtered, index=['Anno'], columns=['Mese'])
-#         print(sales_filtered.reset_index())
-#         columns = sales_filtered.columns#[{"name": i, "id": i} for i in sales_filtered.columns]
-#         data = sales_filtered.reset_index()
-#
-#         columns = [{'name': col, 'id': col} for col in sales_filtered.columns]
-#         data = sales_filtered.to_dict(orient='records')
-#         return data, columns
