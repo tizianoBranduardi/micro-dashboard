@@ -62,6 +62,7 @@ layout = html.Div(
         html.H4(
             children="Analisi Fatturato - Scope mese"
         ),
+        html.Hr(),
         html.Br(),
         html.Div(
             children=[
